@@ -28,8 +28,9 @@ class RepositoryListViewController: UIViewController {
     func configureTableView() {
         view.addSubview(tableView)
         setTableViewDelegates()
-        tableView.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
+        tableView.register(RepositoryCell.self, forCellReuseIdentifier: RepositoryCell.identifier)
         
+        tableView.rowHeight = UITableView.automaticDimension
         tableView.translatesAutoresizingMaskIntoConstraints = false
         tableView.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
         tableView.leftAnchor.constraint(equalTo: view.leftAnchor).isActive = true
@@ -50,8 +51,13 @@ extension RepositoryListViewController: UITableViewDelegate, UITableViewDataSour
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
-        cell.textLabel?.text = viewModel.repositories[indexPath.row].name
+        let cell = tableView.dequeueReusableCell(withIdentifier: RepositoryCell.identifier, for: indexPath) as! RepositoryCell
+        cell.configure(item: RepositoryCell.Item(name: viewModel.repositories[indexPath.row].name ?? "",
+                                                 description: viewModel.repositories[indexPath.row].description ?? "",
+                                                 favoriteCount: String(viewModel.repositories[indexPath.row].favoriteCount ?? 1),
+                                                 language: viewModel.repositories[indexPath.row].language ?? "",
+                                                 openIssuesCount: String(viewModel.repositories[indexPath.row].openIssuesCount ?? 1),
+                                                 updatedDate: viewModel.repositories[indexPath.row].updatedDate ?? ""))
         return cell
     }
 }
