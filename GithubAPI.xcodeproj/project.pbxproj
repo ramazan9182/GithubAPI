@@ -21,6 +21,9 @@
 		18EFE9BC2971514100B56892 /* FavouriteRepositoryListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18EFE9BB2971514100B56892 /* FavouriteRepositoryListViewController.swift */; };
 		18EFE9BE2971516800B56892 /* SearchRepositoryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18EFE9BD2971516800B56892 /* SearchRepositoryViewController.swift */; };
 		18EFE9C0297154AC00B56892 /* TabBarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18EFE9BF297154AC00B56892 /* TabBarViewController.swift */; };
+		18EFE9C22971881300B56892 /* UIView+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18EFE9C12971881300B56892 /* UIView+Extensions.swift */; };
+		18EFE9C529718DFC00B56892 /* RepositoryCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18EFE9C429718DFC00B56892 /* RepositoryCell.swift */; };
+		18EFE9C82971993300B56892 /* RepositoryCell+Item.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18EFE9C72971993300B56892 /* RepositoryCell+Item.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -59,6 +62,9 @@
 		18EFE9BB2971514100B56892 /* FavouriteRepositoryListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavouriteRepositoryListViewController.swift; sourceTree = "<group>"; };
 		18EFE9BD2971516800B56892 /* SearchRepositoryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchRepositoryViewController.swift; sourceTree = "<group>"; };
 		18EFE9BF297154AC00B56892 /* TabBarViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarViewController.swift; sourceTree = "<group>"; };
+		18EFE9C12971881300B56892 /* UIView+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+Extensions.swift"; sourceTree = "<group>"; };
+		18EFE9C429718DFC00B56892 /* RepositoryCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RepositoryCell.swift; sourceTree = "<group>"; };
+		18EFE9C72971993300B56892 /* RepositoryCell+Item.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RepositoryCell+Item.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -118,6 +124,7 @@
 				18EFE9AB2970AFCD00B56892 /* View */,
 				18EFE9AC2970AFE200B56892 /* ViewModel */,
 				18EFE9AD2970AFF500B56892 /* Services */,
+				18EFE9C329718D7700B56892 /* TableViewCells */,
 				18EFE9AE2970B01D00B56892 /* Extensions */,
 			);
 			path = GithubAPI;
@@ -178,8 +185,26 @@
 		18EFE9AE2970B01D00B56892 /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
+				18EFE9C12971881300B56892 /* UIView+Extensions.swift */,
 			);
 			path = Extensions;
+			sourceTree = "<group>";
+		};
+		18EFE9C329718D7700B56892 /* TableViewCells */ = {
+			isa = PBXGroup;
+			children = (
+				18EFE9C62971991000B56892 /* RepositoryCell */,
+			);
+			path = TableViewCells;
+			sourceTree = "<group>";
+		};
+		18EFE9C62971991000B56892 /* RepositoryCell */ = {
+			isa = PBXGroup;
+			children = (
+				18EFE9C429718DFC00B56892 /* RepositoryCell.swift */,
+				18EFE9C72971993300B56892 /* RepositoryCell+Item.swift */,
+			);
+			path = RepositoryCell;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -318,8 +343,11 @@
 				18EFE9B42970BE2E00B56892 /* RepositoryViewModel.swift in Sources */,
 				18EFE9C0297154AC00B56892 /* TabBarViewController.swift in Sources */,
 				18EFE9BE2971516800B56892 /* SearchRepositoryViewController.swift in Sources */,
+				18EFE9C82971993300B56892 /* RepositoryCell+Item.swift in Sources */,
+				18EFE9C529718DFC00B56892 /* RepositoryCell.swift in Sources */,
 				18EFE9782970ACBE00B56892 /* AppDelegate.swift in Sources */,
 				18EFE9B02970B2C100B56892 /* Repository.swift in Sources */,
+				18EFE9C22971881300B56892 /* UIView+Extensions.swift in Sources */,
 				18EFE9B629714D4F00B56892 /* SceneDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

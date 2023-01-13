@@ -10,7 +10,7 @@ import Foundation
 public final class RepositoryViewModel {
     
     private var apiService = APIService()
-    private var repositories = [Repository]()
+    private(set) var repositories = [Repository]()
     
     func fetchRepositories(completion: @escaping () -> ()) {
             

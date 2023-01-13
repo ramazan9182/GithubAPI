@@ -31,8 +31,8 @@ class TabBarViewController: UITabBarController {
     @available(iOS 13.0, *)
     func setupVCs() {
         viewControllers = [
-            createNavController(for: RepositoryListViewController(), title: NSLocalizedString("FavouriteList", comment: ""), image: UIImage(systemName: "magnifyingglass")!),
-            createNavController(for: FavouriteRepositoryListViewController(), title: NSLocalizedString("RepositoryList", comment: ""), image: UIImage(systemName: "house")!),
+            createNavController(for: FavouriteRepositoryListViewController(), title: NSLocalizedString("FavouriteList", comment: ""), image: UIImage(systemName: "magnifyingglass")!),
+            createNavController(for: RepositoryListViewController(), title: NSLocalizedString("RepositoryList", comment: ""), image: UIImage(systemName: "house")!),
             createNavController(for: SearchRepositoryViewController(), title: NSLocalizedString("Search", comment: ""), image: UIImage(systemName: "magnifyingglass")!)
         ]
     }
