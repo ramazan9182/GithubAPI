@@ -16,6 +16,12 @@ public final class RepositoryViewModel {
     private var listLimit : Int = 10
     public var numberOfPages : Int?
     private(set) var resultList = [Repository]()
+    public var languageArray = [String]()
+    
+    public var scopeButtonTitles: [String] {
+        languageArray.insert("All", at: 0)
+        return languageArray
+    }
     
     func fetchRepositories(completion: @escaping () -> ()) {
         apiService.getRepositories { [weak self] (result) in
@@ -34,15 +40,27 @@ public final class RepositoryViewModel {
         chunkedListArray =  repositories.chunked(into: listLimit)
         numberOfPages = chunkedListArray.count
         resultList = chunkedListArray[0]
+        setupLanguageArray()
+    }
+    
+    func setupLanguageArray() {
+        languageArray = []
+        for repository in resultList {
+            guard let language = repository.language else {return}
+            languageArray.append(language)
+            languageArray = languageArray.unique(source: languageArray)
+        }
     }
     
     func previousButtonClicked() {
         currentPage -= 1
         resultList = chunkedListArray[currentPage]
+        setupLanguageArray()
     }
     
     func nextButtonClicked() {
         currentPage += 1
         resultList = chunkedListArray[currentPage]
+        setupLanguageArray()
     }
 }

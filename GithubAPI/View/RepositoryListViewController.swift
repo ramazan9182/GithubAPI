@@ -10,6 +10,7 @@ import UIKit
 class RepositoryListViewController: UIViewController {
     
     private var viewModel = RepositoryViewModel()
+    private let searchController = UISearchController()
     
     let tableView: UITableView = {
         let tableView = UITableView()
@@ -58,20 +59,37 @@ class RepositoryListViewController: UIViewController {
         configureTableView()
         setupBottomControls()
         loadRepositoriesDta()
+        
     }
     
     private func loadRepositoriesDta() {
         viewModel.fetchRepositories { [weak self] in
+            self?.initSearchController()
             self?.pageControl.currentPage = self?.viewModel.currentPage ?? 0
             self?.pageControl.numberOfPages = self?.viewModel.numberOfPages ?? 0
             self?.tableView.reloadData()
         }
     }
     
+    func initSearchController()
+    {
+        searchController.loadViewIfNeeded()
+        searchController.searchResultsUpdater = self
+        searchController.obscuresBackgroundDuringPresentation = false
+        searchController.searchBar.enablesReturnKeyAutomatically = false
+        searchController.searchBar.returnKeyType = UIReturnKeyType.done
+        definesPresentationContext = true
+        
+        navigationItem.searchController = searchController
+        navigationItem.hidesSearchBarWhenScrolling = false
+        searchController.searchBar.scopeButtonTitles = viewModel.scopeButtonTitles
+        searchController.searchBar.delegate = self
+    }
+    
     func configureTableView() {
         setTableViewDelegates()
         tableView.register(RepositoryCell.self, forCellReuseIdentifier: RepositoryCell.identifier)
-    
+        
         tableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor).isActive = true
         tableView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor).isActive = true
         tableView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor).isActive = true
@@ -99,6 +117,7 @@ class RepositoryListViewController: UIViewController {
     @objc private func previousButtonAction(sender: UIButton!) {
         guard viewModel.currentPage != 0 else {return}
         viewModel.previousButtonClicked()
+        searchController.searchBar.scopeButtonTitles = viewModel.scopeButtonTitles
         pageControl.currentPage = viewModel.currentPage
         tableView.reloadData()
     }
@@ -106,6 +125,7 @@ class RepositoryListViewController: UIViewController {
     @objc private func nextButtonAction(sender: UIButton!) {
         guard viewModel.currentPage != (viewModel.chunkedListArray.count - 1) else {return}
         viewModel.nextButtonClicked()
+        searchController.searchBar.scopeButtonTitles = viewModel.scopeButtonTitles
         pageControl.currentPage = viewModel.currentPage
         tableView.reloadData()
     }
@@ -122,6 +142,12 @@ extension RepositoryListViewController: UITableViewDelegate, UITableViewDataSour
         cell.configure(item: RepositoryCell.Item(name: viewModel.resultList[indexPath.row].name ?? "",
                                                  description: viewModel.resultList[indexPath.row].description ?? ""))
         return cell
+    }
+}
+
+extension RepositoryListViewController: UISearchBarDelegate, UISearchResultsUpdating {
+    func updateSearchResults(for searchController: UISearchController) {
+        print("")
     }
 }
 
