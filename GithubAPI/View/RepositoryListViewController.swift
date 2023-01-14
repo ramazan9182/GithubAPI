@@ -38,8 +38,6 @@ class RepositoryListViewController: UIViewController {
     
     private let pageControl: UIPageControl = {
         let pc = UIPageControl()
-        pc.currentPage = 0
-        pc.numberOfPages = 5
         pc.currentPageIndicatorTintColor = .mainPink
         pc.pageIndicatorTintColor = UIColor(red: 249/255, green: 207/255, blue: 224/255, alpha: 1)
         return pc
@@ -55,6 +53,8 @@ class RepositoryListViewController: UIViewController {
         super.viewDidLoad()
         view.addSubview(tableView)
         view.addSubview(bottomControlsStackView)
+        previousButton.addTarget(self, action: #selector(previousButtonAction), for: .touchUpInside)
+        nextButton.addTarget(self, action: #selector(nextButtonAction), for: .touchUpInside)
         configureTableView()
         setupBottomControls()
         loadRepositoriesDta()
@@ -62,6 +62,8 @@ class RepositoryListViewController: UIViewController {
     
     private func loadRepositoriesDta() {
         viewModel.fetchRepositories { [weak self] in
+            self?.pageControl.currentPage = self?.viewModel.currentPage ?? 0
+            self?.pageControl.numberOfPages = self?.viewModel.numberOfPages ?? 0
             self?.tableView.reloadData()
         }
     }
@@ -94,17 +96,31 @@ class RepositoryListViewController: UIViewController {
         ])
     }
     
+    @objc private func previousButtonAction(sender: UIButton!) {
+        guard viewModel.currentPage != 0 else {return}
+        viewModel.previousButtonClicked()
+        pageControl.currentPage = viewModel.currentPage
+        tableView.reloadData()
+    }
+    
+    @objc private func nextButtonAction(sender: UIButton!) {
+        guard viewModel.currentPage != (viewModel.chunkedListArray.count - 1) else {return}
+        viewModel.nextButtonClicked()
+        pageControl.currentPage = viewModel.currentPage
+        tableView.reloadData()
+    }
+    
 }
 
 extension RepositoryListViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return viewModel.repositories.count
+        return viewModel.resultList.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: RepositoryCell.identifier, for: indexPath) as! RepositoryCell
-        cell.configure(item: RepositoryCell.Item(name: viewModel.repositories[indexPath.row].name ?? "",
-                                                 description: viewModel.repositories[indexPath.row].description ?? ""))
+        cell.configure(item: RepositoryCell.Item(name: viewModel.resultList[indexPath.row].name ?? "",
+                                                 description: viewModel.resultList[indexPath.row].description ?? ""))
         return cell
     }
 }

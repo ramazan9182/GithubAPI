@@ -10,29 +10,39 @@ import Foundation
 public final class RepositoryViewModel {
     
     private var apiService = APIService()
-    private(set) var repositories = [Repository]()
-    var currentPage : Int = 1
-    var listLimit : Int = 5
+    private var repositoryArray = [Repository]()
+    private(set) var chunkedListArray = [[Repository]]()
+    public var currentPage : Int = 0
+    private var listLimit : Int = 10
+    public var numberOfPages : Int?
+    private(set) var resultList = [Repository]()
     
     func fetchRepositories(completion: @escaping () -> ()) {
-        
-        // weak self - prevent retain cycles
         apiService.getRepositories { [weak self] (result) in
-            
             switch result {
             case .success(let response):
-                self?.repositories = response
-                self?.setupPage(listLimit: self?.listLimit ?? 5)
+                self?.repositoryArray = response
+                self?.setupPage(repositories: response)
                 completion()
             case .failure(let error):
-                // Something is wrong with the JSON file or the model
                 print("Error processing json data: \(error)")
             }
         }
     }
     
-    func setupPage(listLimit: Int) {
-       var deneme =  repositories.chunked(into: listLimit)
-        print(deneme)
+    func setupPage(repositories: [Repository]) {
+        chunkedListArray =  repositories.chunked(into: listLimit)
+        numberOfPages = chunkedListArray.count
+        resultList = chunkedListArray[0]
+    }
+    
+    func previousButtonClicked() {
+        currentPage -= 1
+        resultList = chunkedListArray[currentPage]
+    }
+    
+    func nextButtonClicked() {
+        currentPage += 1
+        resultList = chunkedListArray[currentPage]
     }
 }

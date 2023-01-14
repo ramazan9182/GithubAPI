@@ -7,16 +7,16 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "10832FE6-7F60-488B-8BFD-17673272F26B"
+            uuid = "B244FA92-F81D-47DF-B627-E52FC8876D49"
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "GithubAPI/ViewModel/RepositoryViewModel.swift"
+            filePath = "GithubAPI/View/RepositoryListViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "36"
-            endingLineNumber = "36"
-            landmarkName = "setupPage(listLimit:)"
+            startingLineNumber = "101"
+            endingLineNumber = "101"
+            landmarkName = "previousButtonAction(sender:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
