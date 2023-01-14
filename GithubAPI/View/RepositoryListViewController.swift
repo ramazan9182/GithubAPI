@@ -56,6 +56,7 @@ class RepositoryListViewController: UIViewController {
         view.addSubview(bottomControlsStackView)
         previousButton.addTarget(self, action: #selector(previousButtonAction), for: .touchUpInside)
         nextButton.addTarget(self, action: #selector(nextButtonAction), for: .touchUpInside)
+        configureSortButton()
         configureTableView()
         setupBottomControls()
         loadRepositoriesDta()
@@ -71,8 +72,11 @@ class RepositoryListViewController: UIViewController {
         }
     }
     
-    func initSearchController()
-    {
+    private func configureSortButton() {
+        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "A-Z", style: .plain, target: self, action: #selector(sortButtonTapped))
+    }
+    
+    private func initSearchController() {
         searchController.loadViewIfNeeded()
         searchController.searchResultsUpdater = self
         searchController.obscuresBackgroundDuringPresentation = false
@@ -117,6 +121,7 @@ class RepositoryListViewController: UIViewController {
     @objc private func previousButtonAction(sender: UIButton!) {
         guard viewModel.currentPage != 0 else {return}
         viewModel.previousButtonClicked()
+        updateSearchResults(for: searchController)
         searchController.searchBar.scopeButtonTitles = viewModel.scopeButtonTitles
         pageControl.currentPage = viewModel.currentPage
         tableView.reloadData()
@@ -125,8 +130,15 @@ class RepositoryListViewController: UIViewController {
     @objc private func nextButtonAction(sender: UIButton!) {
         guard viewModel.currentPage != (viewModel.chunkedListArray.count - 1) else {return}
         viewModel.nextButtonClicked()
+        updateSearchResults(for: searchController)
         searchController.searchBar.scopeButtonTitles = viewModel.scopeButtonTitles
         pageControl.currentPage = viewModel.currentPage
+        tableView.reloadData()
+    }
+    
+    @objc private func sortButtonTapped(sender: UIButton!) {
+        viewModel.resultList = viewModel.resultList.sorted(by: {$0.name.map({$0.trimmingCharacters(in: .whitespaces)}) ?? "" < $1.name ?? ""})
+        viewModel.filteredList = viewModel.filteredList.sorted(by: {$0.name.map({$0.trimmingCharacters(in: .whitespaces)}) ?? "" < $1.name ?? ""})
         tableView.reloadData()
     }
     
@@ -134,20 +146,58 @@ class RepositoryListViewController: UIViewController {
 
 extension RepositoryListViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        
+        if(searchController.isActive)
+        {
+            return viewModel.filteredList.count
+        }
         return viewModel.resultList.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: RepositoryCell.identifier, for: indexPath) as! RepositoryCell
-        cell.configure(item: RepositoryCell.Item(name: viewModel.resultList[indexPath.row].name ?? "",
-                                                 description: viewModel.resultList[indexPath.row].description ?? ""))
+        
+        let thisShape: Repository!
+        if(searchController.isActive)
+        {
+            thisShape = viewModel.filteredList[indexPath.row]
+        }
+        else
+        {
+            thisShape = viewModel.resultList[indexPath.row]
+        }
+        cell.configure(item: RepositoryCell.Item(name: thisShape.name ?? "",
+                                                 description: thisShape.description ?? ""))
         return cell
     }
 }
 
 extension RepositoryListViewController: UISearchBarDelegate, UISearchResultsUpdating {
+    
     func updateSearchResults(for searchController: UISearchController) {
-        print("")
+        let searchBar = searchController.searchBar
+        let scopeButton = searchBar.scopeButtonTitles![searchBar.selectedScopeButtonIndex]
+        let searchText = searchBar.text!
+        
+        filterForSearchTextAndScopeButton(searchText: searchText, scopeButton: scopeButton)
     }
+    
+    func filterForSearchTextAndScopeButton(searchText: String, scopeButton : String = "All") {
+        var tempArray = viewModel.resultList.filter{($0.language == scopeButton)}
+        
+        tempArray = tempArray.isEmpty ? viewModel.resultList : tempArray
+        
+        viewModel.filteredList = tempArray.filter({ repository in
+            if(searchController.searchBar.text != "") {
+                guard let name = repository.name else {return false}
+                let searchTextMatch = name.lowercased().contains(searchText.lowercased())
+                return searchTextMatch
+            } else {
+                return true
+            }
+        })
+        tableView.reloadData()
+    }
+    
 }
 

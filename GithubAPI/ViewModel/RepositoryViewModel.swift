@@ -15,7 +15,8 @@ public final class RepositoryViewModel {
     public var currentPage : Int = 0
     private var listLimit : Int = 10
     public var numberOfPages : Int?
-    private(set) var resultList = [Repository]()
+    public var resultList = [Repository]()
+    public var filteredList = [Repository]()
     public var languageArray = [String]()
     
     public var scopeButtonTitles: [String] {
@@ -54,12 +55,16 @@ public final class RepositoryViewModel {
     
     func previousButtonClicked() {
         currentPage -= 1
+        resultList = []
+        filteredList = []
         resultList = chunkedListArray[currentPage]
         setupLanguageArray()
     }
     
     func nextButtonClicked() {
         currentPage += 1
+        resultList = []
+        filteredList = []
         resultList = chunkedListArray[currentPage]
         setupLanguageArray()
     }
