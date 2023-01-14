@@ -10,99 +10,31 @@ import UIKit
 public class RepositoryCell: UITableViewCell {
     
     public static let identifier = "RepositoryCell"
-    private let spacingOfVerticalStackView: CGFloat = 4
-    private let spacingOfHorizontalStackView: CGFloat = 4
-    private let heightOfContainerOfImageView: CGFloat = 16
-    private let topPaddingOfImageView: CGFloat = 4
-    private let heightOfImageView: CGFloat = 12
-    private let widthOfImageView: CGFloat = 12
-    
-    private lazy var verticalStackView: UIStackView = {
-        let stackView = UIStackView()
-        stackView.axis = .vertical
-        stackView.alignment = .fill
-        stackView.distribution = .fill
-        stackView.spacing = 4
-        return stackView
-    }()
-    
-    private lazy var horizontalStackView: UIStackView = {
-        let stackView = UIStackView()
-        stackView.axis = .horizontal
-        stackView.alignment = .leading
-        stackView.distribution = .equalCentering
-        stackView.spacing = 4
-        return stackView
-    }()
-    
-    private lazy var favoriteCountStackView: UIStackView = {
-        let stackView = UIStackView()
-        stackView.axis = .horizontal
-        stackView.alignment = .center
-        stackView.distribution = .equalSpacing
-        stackView.spacing = 4
-        return stackView
-    }()
-    
-    private lazy var languageStackView: UIStackView = {
-        let stackView = UIStackView()
-        stackView.axis = .horizontal
-        stackView.alignment = .center
-        stackView.distribution = .equalSpacing
-        stackView.spacing = 4
-        return stackView
-    }()
     
     private lazy var repositoryTitleLabel: UILabel = {
         let label = UILabel()
         label.adjustsFontSizeToFitWidth = false
+        label.font = UIFont.boldSystemFont(ofSize: 18)
+        label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
     
     private lazy var repositoryDescriptionLabel: UILabel = {
         let label = UILabel()
-        label.numberOfLines = 0
         label.adjustsFontSizeToFitWidth = false
+        label.numberOfLines = 0
+        label.font = UIFont.boldSystemFont(ofSize: 20.0)
+        label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
     
-    private lazy var favoriteCountLabel: UILabel = {
-        let label = UILabel()
-        label.adjustsFontSizeToFitWidth = true
-        return label
-    }()
-    
-    private lazy var languageLabel: UILabel = {
-        let label = UILabel()
-        label.adjustsFontSizeToFitWidth = true
-        return label
-    }()
-    
-    private lazy var openIssuesCountLabel: UILabel = {
-        let label = UILabel()
-        label.adjustsFontSizeToFitWidth = true
-        return label
-    }()
-    
-    private lazy var updatedDateLabel: UILabel = {
-        let label = UILabel()
-        label.adjustsFontSizeToFitWidth = true
-        return label
-    }()
-    
-    private lazy var favoriteImageView: UIImageView = {
-        let imageView = UIImageView()
-        imageView.image = UIImage(named: "star")
-        imageView.contentMode = .scaleAspectFit
-
-        return imageView
-    }()
-    
-    private lazy var languageView: UIView = {
-        let view = UIView()
-        view.backgroundColor = .red
-
-        return view
+    private var leftStackView: UIStackView = {
+        let stackView = UIStackView()
+        stackView.axis = .vertical
+        stackView.distribution = .fill
+        stackView.spacing = 4
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        return stackView
     }()
     
     public override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
@@ -134,44 +66,19 @@ extension RepositoryCell {
     }
     
     private func layout() {
-        contentView.addSubview(verticalStackView)
-        setVerticalStackView()
-        verticalStackView.addArrangedSubview(repositoryTitleLabel)
-        verticalStackView.addArrangedSubview(repositoryDescriptionLabel)
-        verticalStackView.addArrangedSubview(horizontalStackView)
-        
-        horizontalStackView.addArrangedSubview(favoriteCountStackView)
-        horizontalStackView.addArrangedSubview(languageStackView)
-        horizontalStackView.addArrangedSubview(openIssuesCountLabel)
-        horizontalStackView.addArrangedSubview(updatedDateLabel)
-        
-        setFavoriteImageView()
-        favoriteCountStackView.addArrangedSubview(favoriteImageView)
-        favoriteCountStackView.addArrangedSubview(favoriteCountLabel)
-        
-        setLanguageView()
-        languageStackView.addArrangedSubview(languageView)
-        languageStackView.addArrangedSubview(languageLabel)
+        contentView.addSubview(leftStackView)
+        setupLeftStackViewConstraint()
     }
     
-    func setVerticalStackView() {
-        verticalStackView.translatesAutoresizingMaskIntoConstraints = false
-        verticalStackView.topAnchor.constraint(equalTo: contentView.topAnchor).isActive = true
-        verticalStackView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor).isActive = true
-        verticalStackView.leftAnchor.constraint(equalTo: contentView.leftAnchor, constant: 16).isActive = true
-        verticalStackView.rightAnchor.constraint(equalTo: contentView.rightAnchor).isActive = true
-    }
-    
-    func setFavoriteImageView() {
-        favoriteImageView.translatesAutoresizingMaskIntoConstraints = false
-        favoriteImageView.widthAnchor.constraint(equalToConstant: 12).isActive = true
-        favoriteImageView.heightAnchor.constraint(equalToConstant: 12).isActive = true
-    }
-    
-    func setLanguageView() {
-        languageView.translatesAutoresizingMaskIntoConstraints = false
-        languageView.widthAnchor.constraint(equalToConstant: 12).isActive = true
-        languageView.heightAnchor.constraint(equalToConstant: 12).isActive = true
+    func setupLeftStackViewConstraint() {
+        leftStackView.addArrangedSubview(repositoryTitleLabel)
+        leftStackView.addArrangedSubview(repositoryDescriptionLabel)
+        NSLayoutConstraint.activate([
+            leftStackView.topAnchor.constraint(equalTo: contentView.topAnchor),
+            leftStackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
+            leftStackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
+            leftStackView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor)
+        ])
     }
     
 }
@@ -179,11 +86,10 @@ extension RepositoryCell {
 // MARK: - Configure
 extension RepositoryCell {
     public func configure(item: RepositoryCell.Item) {
-        repositoryTitleLabel.text = item.name
-        repositoryDescriptionLabel.text = item.description
-        favoriteCountLabel.text = item.favoriteCount
-        languageLabel.text = item.language
-        openIssuesCountLabel.text = item.openIssuesCount
-        updatedDateLabel.text = item.updatedDate
+        let descriptionAtributedText = NSAttributedString (string: item.description.capitalizingFirstLetter(),
+                                                           attributes: [NSAttributedString.Key.font : UIFont.systemFont(ofSize: 15),
+                                                                        NSAttributedString.Key.foregroundColor : UIColor.gray])
+        repositoryTitleLabel.text = item.name.capitalizingFirstLetter()
+        repositoryDescriptionLabel.attributedText = descriptionAtributedText
     }
 }
